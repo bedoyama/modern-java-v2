@@ -10,9 +10,9 @@ import java.util.stream.Collectors;
 
 public class PredicateStudentExample {
 
-    static Predicate<Student> p1 = (s) -> s.getGradeLevel()>=3;
+    static Predicate<Student> gradeLevelIsGood = (s) -> s.getGradeLevel()>=3;
 
-    static Predicate<Student> p2 = (s) -> s.getGpa()>=3.9;
+    static Predicate<Student> gpaIsGood = (s) -> s.getGpa()>=3.9;
 
     static Function<Integer,Predicate<Integer>> gradePredicate = (toCompare) -> (number) -> number > toCompare;
     static Function<Double,Predicate<Double>>  gpaPredicate = (toCompare) -> (number) -> number > toCompare;
@@ -22,12 +22,14 @@ public class PredicateStudentExample {
 
         List<Student> studentList = StudentDataBase.getAllStudents();
 
+        // First way to use the predicate
         studentList.stream()
-                .filter(PredicateStudentExample.p1)
+                .filter(PredicateStudentExample.gradeLevelIsGood)
                 .collect(Collectors.toList());
 
+        // More explicit, this is useful where the other one is not enough
         studentList.forEach((student -> {
-            if(p1.test(student)){
+            if(gpaIsGood.test(student)){
                 System.out.println(student);
             }
         }));

@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class FunctionStudentExample {
 
@@ -16,7 +15,7 @@ public class FunctionStudentExample {
         Map<String,Double> studentGradeMap = new HashMap<>();
         students.forEach((student -> {
 
-            if(PredicateStudentExample.p1.test(student)){
+            if(PredicateStudentExample.gradeLevelIsGood.test(student)){
                 studentGradeMap.put(student.getName(),student.getGpa());
             }
         }));
