@@ -24,7 +24,7 @@ public class PredicateStudentExample {
 
         System.out.println("studentList -> " + studentList);
         System.out.println("studentList Len -> " + studentList.toArray().length);
-        // First way to use the predicate
+
         List<Student> newStudentList = studentList.stream()
                 .filter(PredicateStudentExample.gradeLevelIsGood)
                 .collect(Collectors.toList());
@@ -36,7 +36,6 @@ public class PredicateStudentExample {
 
         System.out.println("newStudentList -> " + newStudentList);
         System.out.println("newStudentList Len -> " + newStudentList.toArray().length);
-        // More explicit, this is useful where the other one is not enough
         newStudentList.forEach((student -> {
             if(gpaIsGood.test(student)){
                 System.out.println(student);
