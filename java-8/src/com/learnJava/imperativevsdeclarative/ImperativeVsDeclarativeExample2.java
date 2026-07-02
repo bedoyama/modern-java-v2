@@ -25,7 +25,7 @@ public class ImperativeVsDeclarativeExample2 {
         System.out.println("unique List : " + uniqueList);
 
         /**
-         * Declarative Syle
+         * Declarative Style
          */
 
         List<Integer> uniqueList1 = integerList.stream()
