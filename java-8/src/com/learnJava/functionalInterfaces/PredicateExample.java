@@ -18,7 +18,7 @@ public class PredicateExample {
 
     public static void predicateOr(){
 
-        System.out.println("Result in predicateOr : " + isEvenPredicate1.and(divisibleBy5Predicate).test(4));
+        System.out.println("Result in predicateOr : " + isEvenPredicate1.or(divisibleBy5Predicate).test(4));
     }
 
     public static void predicateNegate(){
