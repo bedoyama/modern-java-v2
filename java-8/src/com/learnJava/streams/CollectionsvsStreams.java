@@ -20,7 +20,10 @@ public class CollectionsvsStreams {
         Stream<String> namesStream = names.stream();
 
         namesStream.forEach(System.out::println);
-        //namesStream.forEach(System.out::println);
+        // too simple toy example but it works
+        names.stream().forEach(System.out::println);
+        // imperative
+        names.forEach(System.out::println);
 
     }
 }
