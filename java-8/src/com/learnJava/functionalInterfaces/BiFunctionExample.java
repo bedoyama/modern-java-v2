@@ -11,35 +11,40 @@ import java.util.function.Predicate;
 
 public class BiFunctionExample {
 
-    private static Map<String, String> loginPageLocs = new HashMap<>();
+    static BiFunction<List<Student>, Predicate<Student>, Map<String, Double>> biFunction =
+            (students, studentPredicate) -> {
+                Map<String, Double> studentGradeMap = new HashMap<>();
 
+                students.forEach((student -> {
+                    if (studentPredicate.test(student)) {
+                        studentGradeMap.put(student.getName(), student.getGpa());
+                    }
+                }));
 
-    static BiFunction<List<Student>,Predicate<Student>,Map<String, Double>> biFunction = (students,studentPredicate)->{
+                return studentGradeMap;
+            };
 
-        Map<String,Double> studentGradeMap = new HashMap<>();
-        students.forEach((student -> {
+    // Example data for the second BiFunction
+    private static final Map<String, String> loginPageLocs = Map.of(
+            "username", "id=username",
+            "password", "id=password",
+            "loginButton", "id=login"
+    );
 
-            if(studentPredicate.test(student)){
-                studentGradeMap.put(student.getName(),student.getGpa());
-            }
-        }));
-
-        return studentGradeMap;
-
-    };
-
-    public static String getLoginLocs(String sLocator, String elementType) {
-
-        return loginPageLocs.get(elementType);
-    }
-
-    static BiFunction<String,String,String> getLoginLocs = (sLocator,elementType) -> loginPageLocs.get(sLocator);
+    static BiFunction<String, String, String> getLoginLocs = (locator, elementType) ->
+            loginPageLocs.getOrDefault(locator, "Locator not found");
 
     public static void main(String[] args) {
+        System.out.println("Students with good GPA:");
+        System.out.println(biFunction.apply(StudentDataBase.getAllStudents(),
+                PredicateStudentExample.gpaIsGood));
 
-        System.out.println(biFunction.apply(StudentDataBase.getAllStudents(),PredicateStudentExample.gpaIsGood));
+        System.out.println("\nStudents with good grade level:");
+        System.out.println(biFunction.apply(StudentDataBase.getAllStudents(),
+                PredicateStudentExample.gradeLevelIsGood));
 
-        getLoginLocs.apply("locator","elementType");
-
+        System.out.println("\nLogin locators:");
+        System.out.println(getLoginLocs.apply("username", "elementType"));
+        System.out.println(getLoginLocs.apply("password", "elementType"));
     }
 }
