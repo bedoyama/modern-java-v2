@@ -4,13 +4,13 @@ import java.util.function.Function;
 
 public class FunctionExample {
 
-    static Function<String,String> upperCase =  (name) -> name.toUpperCase();
+    //    static Function<String,String> upperCase = String::toUpperCase;
+    static Function<String, String> upperCase = (name) -> name.toUpperCase();
 
-    static Function<String,String> addSomeString =  (name) -> name.toUpperCase().concat("default");
+    static Function<String, String> addSomeString = (name) -> name.toLowerCase().concat("default");
 
-    static Function<String,Integer> strLength =  (name) -> name.length();
-
-
+    //    static Function<String,Integer> strLength = String::length;
+    static Function<String, Integer> strLength = (name) -> name.length();
 
 
     public static void main(String[] args) {
@@ -21,7 +21,7 @@ public class FunctionExample {
 
         System.out.println("Result of compose : " + upperCase.compose(addSomeString).apply("java8"));
 
-        Function<String,String> abc = Function.identity();
+        Function<String, String> abc = Function.identity();
 
         System.out.println(abc.apply("ABC"));
 
