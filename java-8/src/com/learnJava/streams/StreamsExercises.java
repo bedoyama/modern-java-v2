@@ -1,13 +1,11 @@
 package com.learnJava.streams;
 
 
+import com.learnJava.data.Bike;
 import com.learnJava.data.Student;
 import com.learnJava.data.StudentDataBase;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class StreamsExercises {
@@ -74,8 +72,14 @@ public class StreamsExercises {
 // Example: {"Jenny": "BMX", "Mike": "No Bike"}
 // Note: Use "No Bike" as default value when bike information is missing
     public static Map<String, String> nameToBikeModel(List<Student> students) {
-        // TODO: Implement using streams
-        return null;
+        return students.stream()
+                .collect(Collectors.toMap(
+                        Student::getName,
+                        student -> Optional.ofNullable(student.getBike())   // Protect against null
+                                .flatMap(opt -> opt)                        // Optional<Optional<Bike>> -> Optional<Bike>
+                                .map(Bike::getModel)
+                                .orElse("No Bike")
+                ));
     }
 
     // Exercise 6: List of student names with GPA above 3.5
