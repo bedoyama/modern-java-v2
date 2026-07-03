@@ -9,11 +9,11 @@ import java.util.function.Supplier;
 
 public class SupplierExample {
 
-    public static  Supplier<Student> studentSupplier = () -> {
-      return  new Student("Adam",2,4.0,"male", Arrays.asList("swimming", "basketball","volleyball"));
+    public static Supplier<Student> studentSupplier = () -> {
+        return new Student("Adam", 2, 4.0, "male", Arrays.asList("swimming", "basketball", "volleyball"));
     };
 
-    public static  Supplier<List<Student>> studentsSupplier = () -> StudentDataBase.getAllStudents();
+    public static Supplier<List<Student>> studentsSupplier = () -> StudentDataBase.getAllStudents();
 
     public static void main(String[] args) {
 

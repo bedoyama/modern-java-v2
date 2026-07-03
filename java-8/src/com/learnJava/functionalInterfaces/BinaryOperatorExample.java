@@ -5,13 +5,15 @@ import java.util.function.BinaryOperator;
 
 public class BinaryOperatorExample {
 
-   static Comparator<Integer> comparator = (a,b) -> a.compareTo(b);
+//    static Comparator<Integer> comparator = Integer::compareTo;
+    static Comparator<Integer> comparator = (a, b) -> a.compareTo(b);
 
     public static void main(String[] args) {
 
-        BinaryOperator<Integer> binaryOperator = (a,b) -> a*b;
+        BinaryOperator<Integer> binaryOperator = (a, b) -> a * b;
 
-        System.out.println(binaryOperator.apply(3,4));
+        System.out.println(binaryOperator.apply(3, 4));
+        System.out.println(comparator.compare(3, 4));
 
         BinaryOperator<Integer> maxBy = BinaryOperator.maxBy(comparator);
         System.out.println("Result is: " + maxBy.apply(5, 6));
