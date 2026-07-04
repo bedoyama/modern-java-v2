@@ -16,8 +16,12 @@ public class StreamsOfGenerateIterateExample {
 
         List<Integer> integerList  = Stream.iterate(1, x->x*2)
                 .limit(10)
-                .map(Integer::new)
-                .collect(toList());
+                .toList();
+
+//        List<Integer> integerList  = Stream.iterate(1, x->x*2)
+//                .limit(10)
+//                .map(Integer::new)
+//                .collect(toList());
 
         System.out.println("iterate : " + integerList);
 
@@ -26,7 +30,7 @@ public class StreamsOfGenerateIterateExample {
 
         List<Integer> integerList1  = Stream.generate(supplier)
                 .limit(10)
-                .collect(toList());
+                .toList();
         System.out.println("generate : " + integerList1);
 
     }
