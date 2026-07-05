@@ -18,7 +18,7 @@ public class StudentDataBase {
         jenny.setBike(Optional.of(new Bike("Giant", "Contend AR 4")));
 
         Student lisa = new Student("Lisa", 2, 3.4, "female", 9,
-                Arrays.asList("swimming", "piano", "chess"));   // <-- New student
+                Arrays.asList("swimming", "piano", "chess"));
 
         /* 3rd Grade */
         Student emily = new Student("Emily", 3, 4.0, "female", 12,
@@ -29,7 +29,7 @@ public class StudentDataBase {
         dave.setBike(Optional.of(new Bike("Trek", "Marlin 8")));
 
         Student michael = new Student("Michael", 3, 3.7, "male", 13,
-                Arrays.asList("swimming", "football", "tennis"));   // <-- New student
+                Arrays.asList("swimming", "football", "tennis"));
 
         /* 4th Grade */
         Student sophia = new Student("Sophia", 4, 3.5, "female", 10,
@@ -40,9 +40,14 @@ public class StudentDataBase {
                 Arrays.asList("swimming", "basketball", "baseball", "football"));
 
         Student kevin = new Student("Kevin", 4, 3.2, "male", 8,
-                Arrays.asList("swimming", "video games", "reading"));   // <-- New student
+                Arrays.asList("swimming", "video games", "reading"));
 
-        return Arrays.asList(adam, jenny, lisa, emily, dave, michael, sophia, james, kevin);
+        Student adrienne = new Student("Adrienne", 4, 3.9, "female", 14,
+                Arrays.asList("swimming", "running", "triathlon", "cycling"));
+        adrienne.setBike(Optional.of(new Bike("Cannondale", "Synapse")));
+
+        return Arrays.asList(adam, jenny, lisa, emily, dave, michael,
+                sophia, james, kevin, adrienne);
     }
 
     // Keep existing methods for compatibility
