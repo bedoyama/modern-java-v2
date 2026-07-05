@@ -17,6 +17,9 @@ public class StreamsMinByMaxByExample {
         Optional<Student> studentOptional = StudentDataBase.getAllStudents().stream()
                 .collect(Collectors.minBy(Comparator.comparing(Student::getGpa)));
 
+//        Optional<Student> studentOptional = StudentDataBase.getAllStudents().stream()
+//                .min(Comparator.comparing(Student::getGpa));
+
         return studentOptional;
     }
 
@@ -42,7 +45,28 @@ public class StreamsMinByMaxByExample {
                     .filter(student -> maxStudent.getGpa() == student.getGpa())
                     .collect(toList());
 
-            System.out.println("Max Students are : " + maxStudents);
+//            System.out.println("Max Students are : " + maxStudents);
+        }
+        return maxStudents;
+    }
+
+    public static List<Student> maxByMultipleStudents2() {
+
+        List<Student> maxStudents = new ArrayList<>();
+        OptionalDouble studentOptional = StudentDataBase.getAllStudents().stream()
+                .map(Student::getGpa)
+                .mapToDouble(i -> i)
+                .max();
+
+        Double maxStudentGpa = studentOptional.isPresent() ? studentOptional.getAsDouble() : null;
+        System.out.println("maxStudentGpa : " + maxStudentGpa);
+        if (maxStudentGpa != null) {
+
+            maxStudents = StudentDataBase.getAllStudents().stream()
+                    .filter(student -> maxStudentGpa == student.getGpa())
+                    .collect(toList());
+
+//            System.out.println("Max Students are : " + maxStudents);
         }
         return maxStudents;
     }
@@ -51,9 +75,15 @@ public class StreamsMinByMaxByExample {
     public static void main(String[] args) {
 
         System.out.println(minBy());
+        System.out.println();
 
         System.out.println(maxBy());
+        System.out.println();
 
-        System.out.println(maxByMultipleStudents());
+        System.out.println("Max Students are : " + maxByMultipleStudents());
+        System.out.println();
+
+        System.out.println("Max Students are : " + maxByMultipleStudents2());
+        System.out.println();
     }
 }
