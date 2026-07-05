@@ -6,12 +6,29 @@ public class SumClient {
 
     public static void main(String[] args) {
 
-        Sum sum=new Sum();
+        // Sequential version
+        System.out.println("=== Sequential Sum ===");
+        Sum sumSeq = new Sum();
+        long startSeq = System.currentTimeMillis();
 
-        IntStream.rangeClosed(1,1000)
+        IntStream.rangeClosed(1, 1000)
+                .forEach(sumSeq::performSum);
+
+        long durationSeq = System.currentTimeMillis() - startSeq;
+        System.out.println("Result: " + sumSeq.getTotal());
+        System.out.println("Duration: " + durationSeq + " ms\n");
+
+        // Parallel version
+        System.out.println("=== Parallel Sum ===");
+        Sum sumPar = new Sum();
+        long startPar = System.currentTimeMillis();
+
+        IntStream.rangeClosed(1, 1000)
                 .parallel()
-                .forEach(sum::performSum); //result is : 500500
+                .forEach(sumPar::performSum);
 
-        System.out.println(sum.getTotal());
+        long durationPar = System.currentTimeMillis() - startPar;
+        System.out.println("Result: " + sumPar.getTotal());
+        System.out.println("Duration: " + durationPar + " ms");
     }
 }
