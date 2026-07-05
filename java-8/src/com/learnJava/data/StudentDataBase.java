@@ -69,7 +69,7 @@ public class StudentDataBase {
     public static Optional<Student> getOptionalStudent() {
         Student student = new Student("Adam", 2, 4.0, "male",
                 Arrays.asList("swimming", "basketball", "volleyball"));
-        student.setBike(Optional.of(new Bike("Client123", "Client123")));
+        student.setBike(Optional.of(new Bike("Trek", "Speed Concept")));
         return Optional.of(student);
     }
 }
