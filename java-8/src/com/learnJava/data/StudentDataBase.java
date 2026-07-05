@@ -46,8 +46,20 @@ public class StudentDataBase {
                 Arrays.asList("swimming", "running", "triathlon", "cycling"));
         adrienne.setBike(Optional.of(new Bike("Cannondale", "Synapse")));
 
+        // New talent factory additions - all strong swimmers
+        Student ryan = new Student("Ryan", 4, 3.85, "male", 16,
+                Arrays.asList("swimming", "water polo", "surfing"));
+        ryan.setBike(Optional.of(new Bike("Specialized", "Diverge")));
+
+        Student zoe = new Student("Zoe", 3, 4.0, "female", 13,
+                Arrays.asList("swimming", "diving", "synchronized swimming"));
+
+        Student ethan = new Student("Ethan", 2, 3.75, "male", 12,
+                Arrays.asList("swimming", "triathlon", "open water swimming"));
+        ethan.setBike(Optional.of(new Bike("Trek", "Speed Concept")));
+
         return Arrays.asList(adam, jenny, lisa, emily, dave, michael,
-                sophia, james, kevin, adrienne);
+                sophia, james, kevin, adrienne, ryan, zoe, ethan);
     }
 
     // Keep existing methods for compatibility
