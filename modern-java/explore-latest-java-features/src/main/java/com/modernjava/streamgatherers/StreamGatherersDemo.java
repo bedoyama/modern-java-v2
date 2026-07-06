@@ -140,6 +140,27 @@ public class StreamGatherersDemo {
     private static void demonstrateFold(List<Movie> movies) {
         System.out.println("=== fold() - Folding operations ===");
 
+        int totalDuration = movies.stream()
+                .gather(Gatherers.fold(() -> 0, (acc, movie) -> acc + movie.duration()))
+                .findFirst()
+                .orElse(0);
+
+        double totalRating = movies.stream()
+                .gather(Gatherers.fold(() -> 0.0, (acc, movie) -> acc + movie.rating()))
+                .findFirst()
+                .orElse(0.0);
+        double averageRating = movies.isEmpty() ? 0.0 : totalRating / movies.size();
+
+        String allTitles = movies.stream()
+                .gather(Gatherers.fold(
+                        () -> "",
+                        (acc, movie) -> acc.isEmpty() ? movie.title() : acc + ", " + movie.title()))
+                .findFirst()
+                .orElse("");
+
+        System.out.println("Total duration of all movies: " + totalDuration + " minutes");
+        System.out.println("Average rating: " + String.format("%.2f", averageRating));
+        System.out.println("All movie titles: " + allTitles);
 
         System.out.println();
     }
@@ -167,7 +188,25 @@ public class StreamGatherersDemo {
      */
     private static void demonstrateScan(List<Movie> movies) {
         System.out.println("=== scan() - Scanning operations ===");
+        System.out.println("scan emits intermediate values for each element, unlike fold which emits only the final result.");
 
+        System.out.println("Running duration totals:");
+        movies.stream()
+                .gather(Gatherers.scan(() -> 0, (acc, movie) -> acc + movie.duration()))
+                .forEach(total -> System.out.println("Running total: " + total + " minutes"));
+
+        AtomicInteger ratingCounter = new AtomicInteger(0);
+        ratingCounter.set(0); // Reset counter before starting a different scan operation.
+
+        System.out.println("Running rating averages:");
+        movies.stream()
+                .gather(Gatherers.scan(
+                        () -> 0.0,
+                        (acc, movie) -> {
+                            int count = ratingCounter.incrementAndGet();
+                            return ((acc * (count - 1)) + movie.rating()) / count;
+                        }))
+                .forEach(avg -> System.out.println("Running average: " + String.format("%.2f", avg)));
 
         System.out.println();
     }
@@ -200,6 +239,20 @@ public class StreamGatherersDemo {
 
         long startTime = System.currentTimeMillis();
 
+        movies.stream()
+                .gather(Gatherers.mapConcurrent(2, movie -> {
+                    try {
+                        Thread.sleep(100); // Simulate expensive work per movie.
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
+                    }
+
+                    return Map.entry(
+                            movie.title(),
+                            "Processed: " + movie.genre() + " (" + movie.duration() + "min, " + movie.rating() + "★)"
+                    );
+                }))
+                .forEach(result -> System.out.println(result.getKey() + " -> " + result.getValue()));
 
         long endTime = System.currentTimeMillis();
         System.out.println("Concurrent processing time: " + (endTime - startTime) + "ms");
