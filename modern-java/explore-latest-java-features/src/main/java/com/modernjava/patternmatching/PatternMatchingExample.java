@@ -15,7 +15,7 @@ public class PatternMatchingExample {
 
     }
 
-    public String patternWithBindingVariable(Object o) {
+    public String patternWithInstanceOf(Object o) {
         if (o instanceof Integer i) {
             return "Integer:" + i;
         }

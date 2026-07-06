@@ -1,6 +1,5 @@
 package com.modernjava.patternmatching;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -34,7 +33,7 @@ class PatternMatchingExampleTest {
     @MethodSource("inputWithBindingVariable")
     void patternWithBindingVariable(Object value, String expectedResult) {
 
-        var output = patternMatchingExample.patternWithBindingVariable(value);
+        var output = patternMatchingExample.patternWithInstanceOf(value);
         assertEquals(expectedResult, output);
     }
 
