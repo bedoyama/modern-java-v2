@@ -1,5 +1,5 @@
 package com.modernjava.sealed;
 
-public class Car extends Vehicle {
+public final class Car extends Vehicle {
 
 }
