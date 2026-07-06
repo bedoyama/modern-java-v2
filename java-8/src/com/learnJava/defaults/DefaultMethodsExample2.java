@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DefaultMethodExample2 {
+public class DefaultMethodsExample2 {
 
     static Comparator<Student> nameComparator = Comparator.comparing(Student::getName);
     static Comparator<Student> gpaComparator = Comparator.comparing(Student::getGpa);
@@ -15,7 +15,7 @@ public class DefaultMethodExample2 {
     static Comparator<Student> gradeComparator = Comparator.comparing(Student::getGradeLevel);
     static Consumer<Student> studentConsumer = student -> System.out.println("student : " + student);
 
-    public static void sortByName(List<Student> studentList){
+    public static void sortByName(List<Student> studentList) {
 
         studentList.sort(Comparator.comparing(Student::getName)); // inline
         studentList.sort(nameComparator); // Using a reference
@@ -23,14 +23,14 @@ public class DefaultMethodExample2 {
         studentList.forEach(studentConsumer);
     }
 
-    public static void sortByGPA(List<Student> studentList){
+    public static void sortByGPA(List<Student> studentList) {
 
         studentList.sort(gpaComparator);
         System.out.println("After Sort BY GPA : ");
         studentList.forEach(studentConsumer);
     }
 
-    public static void sortByGender(){
+    public static void sortByGender() {
 
         List<Student> studentList = StudentDataBase.getAllStudents();
         Comparator<Student> nullLast = Comparator.nullsFirst(genderComparator);
@@ -41,7 +41,7 @@ public class DefaultMethodExample2 {
     }
 
 
-    public static void comparatorChaining(){
+    public static void comparatorChaining() {
 
         List<Student> studentList = StudentDataBase.getAllStudents();
         studentList.sort(gradeComparator.thenComparing(nameComparator));
