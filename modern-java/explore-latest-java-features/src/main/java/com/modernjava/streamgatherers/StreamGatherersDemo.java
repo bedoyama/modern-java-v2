@@ -80,7 +80,13 @@ public class StreamGatherersDemo {
      */
     private static void demonstrateWindowFixed(List<Movie> movies) {
         System.out.println("=== windowFixed(3) - Fixed-size windows ===");
-
+        movies.stream()
+                .gather(Gatherers.windowFixed(3))
+                .forEach(window -> {
+                    System.out.println("Window of 3 movies:");
+                    window.forEach(movie -> System.out.println("  - " + movie.title()));
+                    System.out.println();
+                });
     }
 
     /**
@@ -100,8 +106,14 @@ public class StreamGatherersDemo {
      */
     private static void demonstrateWindowSliding(List<Movie> movies) {
         System.out.println("=== windowSliding(2) - Sliding windows ===");
-
-
+        movies.stream()
+                .limit(8)
+                .gather(Gatherers.windowSliding(3))
+                .forEach(window -> {
+                    System.out.println("Sliding window:");
+                    window.forEach(movie -> System.out.println("  - " + movie.title()));
+                    System.out.println();
+                });
     }
 
     /**
