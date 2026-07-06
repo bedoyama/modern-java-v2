@@ -1,10 +1,12 @@
 package com.modernjava.sealed;
 
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class VehicleTest {
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testVehicleHierarchy() {
         Vehicle car = new Car();
         Vehicle truck = new Truck();
@@ -13,7 +15,7 @@ class VehicleTest {
         assertTrue(truck instanceof Vehicle);
     }
 
-    @org.junit.jupiter.api.Test
+    @Test
     void testDogNotAllowedToExtendVehicle() {
         // The following line would cause a compilation error if uncommented,
         // because Dog is not permitted to extend the sealed class Vehicle.
@@ -23,4 +25,16 @@ class VehicleTest {
         assertFalse(Vehicle.class.isAssignableFrom(Dog.class));
     }
 
+    @Test
+    void testDrive(){
+        var car = new Car();
+        var truck = new Truck();
+        var electricCar = new ElectricCar();
+        var gasolineCar = new GasolineCar();
+
+        assertEquals("Car", car.drive());
+        assertEquals("Truck", truck.drive());
+        assertEquals("Electric", electricCar.drive());
+        assertEquals("Gas", gasolineCar.drive());
+    }
 }
