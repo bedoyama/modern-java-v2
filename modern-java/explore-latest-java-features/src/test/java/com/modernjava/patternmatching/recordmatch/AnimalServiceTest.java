@@ -27,7 +27,7 @@ class AnimalServiceTest {
     }
 
     @ParameterizedTest()
-    @MethodSource("input")
+    @MethodSource({"input", "inputNull"})
     void retrieveNameGuardedPatternMatching(Animal animal, String expectedResult) {
         var name = animalService.retrieveNameGuardedPatternMatching(animal);
         assertEquals(expectedResult, name);
@@ -39,13 +39,6 @@ class AnimalServiceTest {
                 Arguments.of(new Dog("Scooby", "Black"), "Scooby"),
                 Arguments.of(null, "")
         );
-    }
-
-    @ParameterizedTest()
-    @MethodSource("inputNull")
-    void retrieveNameGuardedPatternMatchingWithNulls(Animal animal, String expectedResult) {
-        var name = animalService.retrieveNameGuardedPatternMatching(animal);
-        assertEquals(expectedResult, name);
     }
 
     private static Stream<Arguments> inputNull() {
