@@ -41,10 +41,10 @@ void main(String[] args) {
     Product product1 = new Product("P001", "Laptop", 999.99, 5);
 
     // Records automatically provide equals(), hashCode(), toString(), and accessors
-    System.out.println("User: " + user1);
-    System.out.println("Display: " + user1.displayName());
-    System.out.println("Product: " + product1);
-    System.out.println("In Stock: " + product1.isInStock());
+    IO.println("User: " + user1);
+    IO.println("Display: " + user1.displayName());
+    IO.println("Product: " + product1);
+    IO.println("In Stock: " + product1.isInStock());
 
     // Records support pattern matching (Java 21+)
     demonstratePatternMatching(user1);
@@ -53,15 +53,15 @@ void main(String[] args) {
     // Working with lists
     List<User> users = List.of(new User("U001", "Alice", "alice@example.com", LocalDate.now()), new User("U002", "Bob", "bob@example.com", LocalDate.now()));
 
-    users.forEach(u -> System.out.println(u.displayName()));
+    users.forEach(u -> IO.println(u.displayName()));
 }
 
 // Pattern matching with records (Java 21+)
 static void demonstratePatternMatching(Object obj) {
     if (obj instanceof User user) {
-        System.out.println("User: " + user.name());
+        IO.println("User: " + user.name());
     } else if (obj instanceof Product product) {
-        System.out.println("Product: " + product.name());
+        IO.println("Product: " + product.name());
     }
 
 }

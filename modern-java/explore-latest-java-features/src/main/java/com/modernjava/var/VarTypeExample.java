@@ -13,9 +13,27 @@ public class VarTypeExample {
     //private var x = "abc";
 
 
-
     public static void main(String[] args) {
 
+        var name = "Peter";
+
+        IO.println("Hello, World! " + transform(name));
+
+        var names = List.of(
+                "Peter",
+                "John",
+                "Mary"
+        );
+
+        names.forEach(name1 -> IO.println("Hello, World! " + transform(name1)));
+
+        var map = Map.ofEntries(
+                Map.entry("Peter", 1),
+                Map.entry("John", 2),
+                Map.entry("Mary", 3)
+        );
+
+        map.forEach((key, value) -> IO.println("Map Entry " + transform(key) + " with value: " + value));
 
     }
 
