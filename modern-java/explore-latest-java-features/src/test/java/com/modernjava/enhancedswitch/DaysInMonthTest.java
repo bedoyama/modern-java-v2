@@ -19,10 +19,31 @@ class DaysInMonthTest {
         assertEquals(expectedNoOfDays, days);
     }
 
+    @ParameterizedTest
+    @MethodSource("inputLeapYear")
+    void getDaysEnhancedSwitch(Month month, int expectedNoOfDays) {
+        int days = DaysInMonth.getDaysEnhancedSwitch(month, 2024);
+        assertEquals(expectedNoOfDays, days);
+    }
 
     private static Stream<Arguments> input() {
         return Stream.of(
                 Arguments.of(Month.FEBRUARY, 28),
+                Arguments.of(Month.SEPTEMBER, 30),
+                Arguments.of(Month.JANUARY, 31)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("inputLeapYear")
+    void getDaysEnhancedSwitchExhaustive(Month month, int expectedNoOfDays) {
+        int days = DaysInMonth.getDaysEnhancedSwitchExhaustive(month, 2024);
+        assertEquals(expectedNoOfDays, days);
+    }
+
+    private static Stream<Arguments> inputLeapYear() {
+        return Stream.of(
+                Arguments.of(Month.FEBRUARY, 29),
                 Arguments.of(Month.SEPTEMBER, 30),
                 Arguments.of(Month.JANUARY, 31)
         );
