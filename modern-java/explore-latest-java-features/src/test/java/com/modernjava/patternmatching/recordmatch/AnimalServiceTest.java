@@ -19,6 +19,20 @@ class AnimalServiceTest {
         assertEquals(expectedResult, name);
     }
 
+    @ParameterizedTest()
+    @MethodSource("input")
+    void retrieveNamePatternMatching(Animal animal, String expectedResult) {
+        var name = animalService.retrieveNamePatternMatching(animal);
+        assertEquals(expectedResult, name);
+    }
+
+    @ParameterizedTest()
+    @MethodSource("input")
+    void retrieveNameGuardedPatternMatching(Animal animal, String expectedResult) {
+        var name = animalService.retrieveNameGuardedPatternMatching(animal);
+        assertEquals(expectedResult, name);
+    }
+
     private static Stream<Arguments> input() {
         return Stream.of(
                 Arguments.of(new Cat("Kitty", "Black"), "Kitty"),
@@ -26,4 +40,21 @@ class AnimalServiceTest {
                 Arguments.of(null, "")
         );
     }
+
+    @ParameterizedTest()
+    @MethodSource("inputNull")
+    void retrieveNameGuardedPatternMatchingWithNulls(Animal animal, String expectedResult) {
+        var name = animalService.retrieveNameGuardedPatternMatching(animal);
+        assertEquals(expectedResult, name);
+    }
+
+    private static Stream<Arguments> inputNull() {
+        return Stream.of(
+                Arguments.of(new Cat(null, null), ""),
+                Arguments.of(new Dog(null, null), ""),
+                Arguments.of(null, "")
+        );
+    }
+
+
 }
