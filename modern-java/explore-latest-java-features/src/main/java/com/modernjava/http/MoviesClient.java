@@ -22,10 +22,18 @@ public class MoviesClient {
     public static final String ALL_MOVIES_URL = "http://127.0.0.1:8000/explore-latest-java-features/src/main/resources/movies.json";
     public static final String MOVIE_BY_ID_URL = "http://127.0.0.1:8000/explore-latest-java-features/src/main/resources/movie_by_id.json";
 
+    private final String allMoviesUrl;
+    private final String movieByIdUrl;
     private final HttpClient client;
     private final ObjectMapper objectMapper;
 
     public MoviesClient() {
+        this(ALL_MOVIES_URL, MOVIE_BY_ID_URL);
+    }
+
+    public MoviesClient(String allMoviesUrl, String movieByIdUrl) {
+        this.allMoviesUrl = allMoviesUrl;
+        this.movieByIdUrl = movieByIdUrl;
         this.client = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper()
                 .registerModule(new JavaTimeModule())
@@ -63,7 +71,7 @@ public class MoviesClient {
             System.out.println("Sync all movies failed: " + e.getMessage());
         }
 
-        // 3) Async first: get a movie by id
+        // 3) Async: get a movie by id
         System.out.println("\n3) getMovieByIdAsync(" + demoMovieId + ")");
         try {
             Movie movieAsync = moviesClient.getMovieByIdAsync(demoMovieId).join();
@@ -84,19 +92,19 @@ public class MoviesClient {
     }
 
     public Movie getMovieById(int movieId) throws IOException, InterruptedException {
-        HttpRequest request = buildGetRequest(MOVIE_BY_ID_URL + "?movie_id=" + movieId);
+        HttpRequest request = buildGetRequest(movieByIdUrl + "?movie_id=" + movieId);
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return parseMovie(response.body());
     }
 
     public List<Movie> getAllMovies() throws IOException, InterruptedException {
-        HttpRequest request = buildGetRequest(ALL_MOVIES_URL);
+        HttpRequest request = buildGetRequest(allMoviesUrl);
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         return parseMovies(response.body());
     }
 
     public CompletableFuture<Movie> getMovieByIdAsync(int movieId) {
-        HttpRequest request = buildGetRequest(MOVIE_BY_ID_URL + "?movie_id=" + movieId);
+        HttpRequest request = buildGetRequest(movieByIdUrl + "?movie_id=" + movieId);
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
@@ -104,7 +112,7 @@ public class MoviesClient {
     }
 
     public CompletableFuture<List<Movie>> getAllMoviesAsync() {
-        HttpRequest request = buildGetRequest(ALL_MOVIES_URL);
+        HttpRequest request = buildGetRequest(allMoviesUrl);
 
         return client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
