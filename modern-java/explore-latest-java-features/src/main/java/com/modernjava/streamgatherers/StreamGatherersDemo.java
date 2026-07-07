@@ -512,13 +512,15 @@ public class StreamGatherersDemo {
 
                         // Finisher: called once after all elements are processed.
                         // Pushes every collected Map.Entry downstream so the stream can iterate them.
-                        (state, downstream) -> state.entrySet().forEach(downstream::push)
+                        (state, downstream) -> state.entrySet()
+                                .stream()
+                                .sorted(Map.Entry.comparingByKey())
+                                .forEach(downstream::push)
                 );
 
         System.out.println("Movies grouped by decade (custom gatherer):");
         movies.stream()
                 .gather(moviesByDecadeGatherer)
-                .sorted(Map.Entry.comparingByKey())
                 .forEach(entry -> {
                     System.out.println("Decade: " + entry.getKey());
                     entry.getValue().forEach(movie ->
