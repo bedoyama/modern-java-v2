@@ -58,10 +58,11 @@ public class StreamGatherersDemo {
 //        demonstrateCompositeGatherers(movies);
 
         //simple custom gatherers
-        demonstrateSimpleCustomGatherer(movies);
+//        demonstrateSimpleCustomGatherer(movies);
 
         //Advanced custom gatherers
-        // demonstrateTraditionalGrouping(movies);
+        demonstrateTraditionalGrouping(movies);
+        demonstrateCustomGathererImpl(movies);
     }
 
     /**
@@ -490,7 +491,40 @@ public class StreamGatherersDemo {
     private static void demonstrateCustomGathererImpl(List<Movie> movies) {
         System.out.println("=== Custom Gatherer Implementation ===");
 
+        // Gatherer.ofSequential() builds a stateful, sequential-only gatherer.
+        // Type parameters: <T, A, R>
+        //   T = Movie        — input element type
+        //   A = HashMap<...> — mutable state type built by the initializer
+        //   R = Map.Entry<String, List<Movie>> — output type emitted by the finisher
+        Gatherer<Movie, HashMap<String, List<Movie>>, Map.Entry<String, List<Movie>>> moviesByDecadeGatherer =
+                Gatherer.ofSequential(
+                        // Initializer: creates the state (a fresh map) once per stream
+                        HashMap::new,
 
+                        // Integrator: called for each Movie; groups it into the map by decade.
+                        // Returns true to continue processing every element.
+                        Gatherer.Integrator.ofGreedy((state, movie, downstream) -> {
+                            int decade = (movie.getReleaseYear() / 10) * 10;
+                            String decadeKey = decade + "s";
+                            state.computeIfAbsent(decadeKey, k -> new java.util.ArrayList<>()).add(movie);
+                            return true;
+                        }),
+
+                        // Finisher: called once after all elements are processed.
+                        // Pushes every collected Map.Entry downstream so the stream can iterate them.
+                        (state, downstream) -> state.entrySet().forEach(downstream::push)
+                );
+
+        System.out.println("Movies grouped by decade (custom gatherer):");
+        movies.stream()
+                .gather(moviesByDecadeGatherer)
+                .sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> {
+                    System.out.println("Decade: " + entry.getKey());
+                    entry.getValue().forEach(movie ->
+                            System.out.println("  - " + movie.title() + " (" + movie.getReleaseYear() + ")"));
+                    System.out.println();
+                });
     }
 
 
