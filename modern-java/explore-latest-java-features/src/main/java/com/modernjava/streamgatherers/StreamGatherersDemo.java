@@ -61,7 +61,7 @@ public class StreamGatherersDemo {
         demonstrateSimpleCustomGatherer(movies);
 
         //Advanced custom gatherers
-       // demonstrateTraditionalGrouping(movies);
+        // demonstrateTraditionalGrouping(movies);
     }
 
     /**
@@ -397,18 +397,18 @@ public class StreamGatherersDemo {
         //   - returns true  → continue processing more elements
         //   - returns false → short-circuit and stop the stream
         Gatherer<Movie, Void, String> highRatedSummaryGatherer = Gatherer.of(
-                (Void state, Movie movie, Gatherer.Downstream<? super String> downstream) -> {
-                    if (movie.rating() >= 8.5) {
-                        String summary = String.format("⭐ %s (%d) - %.1f★ [%s]",
-                                movie.title(),
-                                movie.getReleaseYear(),
-                                movie.rating(),
-                                movie.genre());
-                        return downstream.push(summary); // push result and continue
-                    }
-                    return true; // skip low-rated movies, keep going
-                }
-        );
+                Gatherer.Integrator.ofGreedy((Void state, Movie movie, Gatherer.Downstream<? super String> downstream) -> {
+                            if (movie.rating() >= 8.5) {
+                                String summary = String.format("⭐ %s (%d) - %.1f★ [%s]",
+                                        movie.title(),
+                                        movie.getReleaseYear(),
+                                        movie.rating(),
+                                        movie.genre());
+                                return downstream.push(summary); // push result and continue
+                            }
+                            return true; // skip low-rated movies, keep going
+                        }
+                ));
 
         System.out.println("Custom Gatherer.of() approach (filter & transform in one step):");
         movies.stream()
@@ -492,8 +492,6 @@ public class StreamGatherersDemo {
 
 
     }
-
-
 
 
     /**
