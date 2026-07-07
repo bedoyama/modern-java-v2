@@ -44,20 +44,21 @@ public class StreamGatherersDemo {
         System.out.println();
 
         // Demonstrate all Gatherer functions
-        demonstrateWindowFixed(movies);
-        demonstrateWindowSliding(movies);
-        demonstrateFold(movies);
-        demonstrateScan(movies);
+//        demonstrateWindowFixed(movies);
+//        demonstrateWindowSliding(movies);
+//        demonstrateFold(movies);
+//        demonstrateScan(movies);
 
         // sequentials vs mapconcurrent
-      //  demonstrateSequentialMap(movies);
-       // demonstrateMapConcurrent(movies);
+//        demonstrateSequentialMap(movies);
+//        demonstrateMapConcurrent(movies);
 
 
         //composite gatherers
+//        demonstrateCompositeGatherers(movies);
 
         //simple custom gatherers
-        //demonstrateSimpleCustomGatherer(movies);
+        demonstrateSimpleCustomGatherer(movies);
 
         //Advanced custom gatherers
        // demonstrateTraditionalGrouping(movies);
@@ -240,7 +241,7 @@ public class StreamGatherersDemo {
         long startTime = System.currentTimeMillis();
 
         movies.stream()
-                .gather(Gatherers.mapConcurrent(2, movie -> {
+                .gather(Gatherers.mapConcurrent(6, movie -> {
                     try {
                         Thread.sleep(100); // Simulate expensive work per movie.
                     } catch (InterruptedException e) {
@@ -329,6 +330,24 @@ public class StreamGatherersDemo {
      */
     private static void demonstrateCompositeGatherers(List<Movie> movies) {
         System.out.println("=== Composite Gatherers - Chaining operations ===");
+        System.out.println("Pipeline: filter(rating >= 8.0) → windowFixed(2) → scan(avg duration per window)");
+        System.out.println();
+
+        // Stage 1: filter high-rated movies
+        // Stage 2: group them into non-overlapping windows of 2
+        // Stage 3: scan each window to compute its average duration
+        movies.stream()
+                .filter(movie -> movie.rating() >= 8.0)
+                .gather(Gatherers.windowFixed(2))
+                .gather(Gatherers.scan(
+                        () -> 0.0,
+                        (acc, window) -> window.stream()
+                                .mapToInt(Movie::duration)
+                                .average()
+                                .orElse(0.0)))
+                .forEach(avg -> System.out.printf(
+                        "High-rated movie window average duration: %.1f minutes%n", avg));
+
         System.out.println();
 
     }
@@ -360,7 +379,7 @@ public class StreamGatherersDemo {
         System.out.println("=== Simple Custom Gatherer.of() - Filter & Transform ===");
 
         // Compare with traditional approach
-        System.out.println("Traditional approach (for comparison):");
+        System.out.println("Traditional approach (filter + map):");
         movies.stream()
                 .filter(movie -> movie.rating() >= 8.5)
                 .map(movie -> String.format("⭐ %s (%d) - %.1f★ [%s]",
@@ -372,7 +391,31 @@ public class StreamGatherersDemo {
 
         System.out.println();
 
+        // Custom stateless gatherer using Gatherer.of(integrator)
+        // State type is Void — no accumulation, each element is handled independently.
+        // The integrator receives (state, element, downstream):
+        //   - returns true  → continue processing more elements
+        //   - returns false → short-circuit and stop the stream
+        Gatherer<Movie, Void, String> highRatedSummaryGatherer = Gatherer.of(
+                (Void state, Movie movie, Gatherer.Downstream<? super String> downstream) -> {
+                    if (movie.rating() >= 8.5) {
+                        String summary = String.format("⭐ %s (%d) - %.1f★ [%s]",
+                                movie.title(),
+                                movie.getReleaseYear(),
+                                movie.rating(),
+                                movie.genre());
+                        return downstream.push(summary); // push result and continue
+                    }
+                    return true; // skip low-rated movies, keep going
+                }
+        );
 
+        System.out.println("Custom Gatherer.of() approach (filter & transform in one step):");
+        movies.stream()
+                .gather(highRatedSummaryGatherer)
+                .forEach(summary -> System.out.println("  " + summary));
+
+        System.out.println();
     }
 
     /**
